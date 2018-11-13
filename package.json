@@ -1,0 +1,22 @@
+{
+  "name": "quantum-quail",
+  "version": "1.0.0",
+  "description": "Quantum computer programming",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mapmeld/quantum-quail.git"
+  },
+  "keywords": [
+    "quantum"
+  ],
+  "author": "Nick Doiron <ndoiron@mapmeld.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mapmeld/quantum-quail/issues"
+  },
+  "homepage": "https://github.com/mapmeld/quantum-quail#readme"
+}
