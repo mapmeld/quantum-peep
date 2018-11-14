@@ -2,9 +2,18 @@
   "name": "quantum-quail",
   "version": "1.0.0",
   "description": "Quantum computer programming",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "test": "mocha"
+    "test": "jest --config jestconfig.json",
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
@@ -18,5 +27,14 @@
   "bugs": {
     "url": "https://github.com/mapmeld/quantum-quail/issues"
   },
-  "homepage": "https://github.com/mapmeld/quantum-quail#readme"
+  "homepage": "https://github.com/mapmeld/quantum-quail#readme",
+  "devDependencies": {
+    "@types/jest": "^23.3.9",
+    "jest": "^23.6.0",
+    "prettier": "^1.15.2",
+    "ts-jest": "^23.10.4",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.16.0",
+    "typescript": "^3.1.6"
+  }
 }
