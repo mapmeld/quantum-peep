@@ -2,8 +2,12 @@
 class BasicGate {
   name: string;
   qubit: number;
+  static validGates: Array<string> = ['X'];
 
   constructor (name: string, qubit: number) {
+    if (BasicGate.validGates.indexOf(name.toUpperCase()) === -1) {
+      throw new Error('Gate type unknown');
+    }
     this.name = name;
     this.qubit = qubit;
   }

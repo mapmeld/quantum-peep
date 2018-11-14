@@ -16,6 +16,9 @@ https://github.com/Qiskit/openqasm
 Rigetti's pyQuil (and the previous jsQuil project) compile to Quil:
 http://docs.rigetti.com/en/stable/compiler.html
 
+Microsoft Q#
+https://docs.microsoft.com/en-us/quantum/language/?view=qsharp-preview
+
 ## License
 
 Open source, MIT license
