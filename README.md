@@ -1,6 +1,8 @@
 # Quantum-Quail
 
-Work in progress - rewrite of jsQuil
+Work in progress - rewrite of jsQuil quantum computer programming library
+
+<img src="https://raw.githubusercontent.com/mapmeld/quantum-quail/master/quail-logo.png" width="300"/>
 
 Goals:
 - platform-agnostic: Rigetti, IBM, and potentially more providers
