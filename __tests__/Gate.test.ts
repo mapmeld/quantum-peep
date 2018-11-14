@@ -3,4 +3,5 @@ test('Gate X', () => {
   let xgate = Gates.X(1);
   expect(xgate.code('quil')).toBe('X 1');
   expect(xgate.code('qasm')).toBe('x q[1];');
+  expect(xgate.code('q#')).toBe('X(1);');
 });
