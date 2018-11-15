@@ -1,5 +1,7 @@
 # Quantum-Quail
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/mapmeld/quantum-quail.svg)](https://greenkeeper.io/)
+
 Work in progress - rewrite of jsQuil quantum computer programming library
 
 <img src="https://raw.githubusercontent.com/mapmeld/quantum-quail/master/quail-logo.png" width="300"/>
