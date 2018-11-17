@@ -29,7 +29,7 @@ test('Gate T and add DAGGER later', () => {
   tdg.dagger();
   expect(tdg.code('quil')).toBe('DAGGER T 1');
   expect(tdg.code('qasm')).toBe('tdg q[1];');
-  //expect(tdg.code('q#')).toBe('DAGGER S(1);');
+  expect(() => { tdg.code('q#') }).toThrow(Error);
 
   // subsequent adds don't do anything (should this throw an error?)
   tdg.dagger();
@@ -42,5 +42,5 @@ test('DAGGER X only supported by some platforms', () => {
   x.dagger();
   expect(x.code('quil')).toBe('DAGGER X 1');
   expect(() => { x.code('qasm') }).toThrow(Error);
-  //expect(tdg.code('q#')).toBe('DAGGER X(1);');
+  expect(() => { x.code('q#') }).toThrow(Error);
 });
