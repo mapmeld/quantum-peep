@@ -1,4 +1,5 @@
-import { Gates } from '../src';
+import { Gates } from '../src/gates';
+
 test('Gate X (one qubit)', () => {
   let xgate = Gates.X(1);
   expect(xgate.code('quil')).toBe('X 1');
