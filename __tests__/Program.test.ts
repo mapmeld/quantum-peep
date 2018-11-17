@@ -1,5 +1,4 @@
-import { Gates } from '../src/gates';
-import { Program } from '../src/programs';
+import { Gates, Program } from '../src';
 
 test('one gate program', () => {
   let xgate = Gates.X(1);

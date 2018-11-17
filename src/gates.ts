@@ -1,4 +1,4 @@
-import { BasicGate } from './';
+import { BasicGate } from './basicgate';
 
 export const Gates = {
   X: (qubit: number) => {

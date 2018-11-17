@@ -1,4 +1,5 @@
-import { BasicGate, ProgramStep } from './index';
+import { ProgramStep } from './programstep';
+import { BasicGate } from './basicgate';
 
 class Measure extends ProgramStep {
   qubit: number;
@@ -74,7 +75,7 @@ export class Program {
         let qbs = this.qubitsUsed();
         start += `qreg q[${qbs[qbs.length - 1] + 1}];`
         let rgs = this.registersUsed();
-        start += `creg c[${rgs[rgs.length - 1] + 1}];`        
+        start += `creg c[${rgs[rgs.length - 1] + 1}];`
         break;
     }
 

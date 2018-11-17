@@ -1,4 +1,4 @@
-import { Gates } from '../src/gates';
+import { Gates } from '../src';
 
 test('Gate X (one qubit)', () => {
   let xgate = Gates.X(1);
