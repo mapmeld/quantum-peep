@@ -21,7 +21,7 @@ class Measure extends ProgramStep {
   code (language: string) {
     switch (language) {
       case 'quil':
-        return `MEASURE ${this.qubit} ro[${this.register}]`;
+        return `MEASURE ${this.qubit} [${this.register}]`;
       case 'q#':
         return `let reg${this.register} = M(${this.qubit});`;
       case 'qasm':

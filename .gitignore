@@ -3,3 +3,4 @@
 node_modules
 /lib
 TODO
+__tests__/secrets.json

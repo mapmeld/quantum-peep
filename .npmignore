@@ -4,3 +4,5 @@ tslint.json
 .prettierrc
 jestconfig.json
 quail-logo.png
+__tests__/*
+__tests__/secrets.json
