@@ -19,14 +19,14 @@ p.measure(1, 2);
 // get Microsoft's Q# code
 p.code('q#');
 
-// run on Rigetti QVM
+// run on Rigetti QVM - working on queues
 let q = new QProcessor('rigetti', { api_key: 'aaa', user_id: 'uuu' });
 let runTimes = 1;
 q.run(p, runTimes, (body) => {
   console.log(JSON.parse(body));
 });
 
-// run on IBM quantum chip (ibmqx4)
+// run on IBM quantum chip (ibmqx4) - working on chip selection, queues
 let q2 = new QProcessor('ibm', {
   login: secrets.ibm.token
 });
