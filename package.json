@@ -38,6 +38,7 @@
     "typescript": "^3.1.6"
   },
   "dependencies": {
+    "@qiskit/cloud": "^0.5.0",
     "@types/request": "^2.48.1"
   }
 }

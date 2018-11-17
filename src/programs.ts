@@ -71,15 +71,16 @@ export class Program {
         break;
       case 'qasm':
         start = 'OPENQASM 2.0;include "qelib1.inc";';
-        start += this.qubitsUsed().map((qubit: number) => { return `qreg q[${qubit}];` });
-        start += this.registersUsed().map((register: number) => { return `creg c[${register}];` });
-        start += '\n';
+        let qbs = this.qubitsUsed();
+        start += `qreg q[${qbs[qbs.length - 1] + 1}];`
+        let rgs = this.registersUsed();
+        start += `creg c[${rgs[rgs.length - 1] + 1}];`        
         break;
     }
 
     let body = this.actions.map((action) => {
       return action.code(language);
-    }).join('\n');
+    }).join(language === 'qasm' ? '' : '\n');
     return start + body + end;
   }
 
