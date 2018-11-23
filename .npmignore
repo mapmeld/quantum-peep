@@ -6,3 +6,6 @@ jestconfig.json
 quail-logo.png
 __tests__/*
 __tests__/secrets.json
+.DS_Store
+*.log
+TODO

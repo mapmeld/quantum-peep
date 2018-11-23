@@ -30,7 +30,6 @@ q.run(p, runTimes, (body) => {
 let q2 = new QProcessor('ibm', {
   login: secrets.ibm.token
 });
-// runTimes is not yet used here
 q2.run(p, runTimes, (body) => {
   console.log(JSON.parse(body));
 });

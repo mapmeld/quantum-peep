@@ -58,7 +58,10 @@ export class QProcessor {
       cloud.backends().then((res: object) => {
         console.log(res);
 
-        cloud.run(program.code('qasm'), { backend: 'ibmqx4', engine: 'ibmqx4' })
+        cloud.run(program.code('qasm'), {
+            backend: 'ibmqx4',
+            shots: iterations            
+          })
           .then((res2: object) => {
             callback(JSON.stringify(res2));
           });
