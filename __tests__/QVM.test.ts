@@ -42,8 +42,8 @@ test('blank test', (done) => {
 //   p.add(xgate);
 //   p.measure(1, 2);
 //
-//   let q = new QProcessor('ibm', { login: secrets.ibm.login });
-//   q.run(p, 1, (body: string) => {
+//   let q = new QProcessor('ibm', { login: secrets.ibm.login, processor: 'simulator' });
+//   q.run(p, 2, (body: string) => {
 //     console.log(body);
 //     done();
 //   });

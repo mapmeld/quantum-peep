@@ -19,16 +19,21 @@ p.measure(1, 2);
 // get Microsoft's Q# code
 p.code('q#');
 
-// run on Rigetti QVM - working on queues
-let q = new QProcessor('rigetti', { api_key: 'aaa', user_id: 'uuu' });
-let runTimes = 1;
+// run on Rigetti QVM - working on non-simulator options and queues
+let q = new QProcessor('rigetti', {
+  api_key: 'aaa',
+  user_id: 'uuu',
+  processor: 'simulator'
+});
+let runTimes = 10;
 q.run(p, runTimes, (body) => {
   console.log(JSON.parse(body));
 });
 
-// run on IBM quantum chip (ibmqx4) - working on chip selection, queues
+// run on IBM quantum chip - working on chip options and queues
 let q2 = new QProcessor('ibm', {
-  login: secrets.ibm.token
+  login: secrets.ibm.token,
+  processor: 'ibmqx4'
 });
 q2.run(p, runTimes, (body) => {
   console.log(JSON.parse(body));

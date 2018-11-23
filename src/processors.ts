@@ -6,14 +6,20 @@ const Cloud = require('@qiskit/cloud');
 
 export class QProcessor {
   provider: string;
-  connection: { endpoint: string, api_key: string, user_id: string, login: string };
+  connection: {
+    endpoint: string,
+    api_key: string,
+    user_id: string,
+    login: string,
+    processor: string
+  };
 
-  constructor (provider: string, { endpoint='', api_key='', user_id='', login='' } : { endpoint?: string, api_key?: string, user_id?: string, login?: string }) {
+  constructor (provider: string, { endpoint='', api_key='', user_id='', login='', processor='simulator' } : { endpoint?: string, api_key?: string, user_id?: string, login?: string, processor?: string }) {
     this.provider = provider;
     if (provider === 'rigetti') {
       endpoint = endpoint || 'https://api.rigetti.com/qvm';
     }
-    this.connection = { endpoint, api_key, user_id, login };
+    this.connection = { endpoint, api_key, user_id, login, processor };
   }
 
   run (program: Program, iterations: number, callback: (body: string) => void) {
@@ -59,8 +65,8 @@ export class QProcessor {
         console.log(res);
 
         cloud.run(program.code('qasm'), {
-            backend: 'ibmqx4',
-            shots: iterations            
+            backend: this.connection.processor,
+            shots: iterations
           })
           .then((res2: object) => {
             callback(JSON.stringify(res2));
