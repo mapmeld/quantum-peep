@@ -52,3 +52,18 @@ test('SWAP gates', () => {
   expect(sw.code('qasm')).toBe('swap q[1],q[2];');
   expect(sw.code('q#')).toBe('SWAP(1, 2);');
 });
+
+test('RX gate', () => {
+  let rx = Gates.RX('3.14', 1);
+  expect(rx.code('quil')).toBe('RX(3.14) 1');
+  expect(rx.code('qasm')).toBe('rx(3.14) q[1];');
+  expect(rx.code('q#')).toBe('Rx(3.14, 1);');
+
+  let rx2 = Gates.RX('pi/2', 2);
+  expect(rx2.code('quil')).toBe('RX(pi/2) 2');
+  expect(rx2.code('qasm')).toBe('rx(pi/2) q[2];');
+  expect(rx2.code('q#')).toBe('Rx(1.571, 2);');
+
+  let rx3 = Gates.RX('pi[1]', 3);
+  expect(() => { rx3.code('q#') }).toThrow(Error);
+});
