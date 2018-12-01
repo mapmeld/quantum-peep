@@ -45,3 +45,10 @@ test('DAGGER X only supported by some platforms', () => {
   expect(() => { x.code('qasm') }).toThrow(Error);
   expect(() => { x.code('q#') }).toThrow(Error);
 });
+
+test('SWAP gates', () => {
+  let sw = Gates.SWAP(1, 2);
+  expect(sw.code('quil')).toBe('SWAP 1 2');
+  expect(sw.code('qasm')).toBe('swap q[1],q[2];');
+  expect(sw.code('q#')).toBe('SWAP(1, 2);');
+});

@@ -50,7 +50,7 @@ q2.run(p, runTimes, (body) => {
 ## Language references
 
 IBM's QISkit (for Python and JS) compile to OpenQASM:
-https://github.com/Qiskit/openqasm
+https://github.com/Qiskit/openqasm and Cloud reference: https://github.com/Qiskit/qiskit-js/tree/master/packages/qiskit-cloud
 
 Rigetti's pyQuil (and the previous jsQuil project) compile to Quil:
 http://docs.rigetti.com/en/stable/compiler.html
