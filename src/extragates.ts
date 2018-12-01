@@ -1,6 +1,6 @@
 import { ProgramStep } from './programstep';
 
-class ExtraGate extends ProgramStep {
+export class ExtraGate extends ProgramStep {
   name: string;
   qubits: Array<number>;
   static validGates: Array<string> = ['SWAP', 'RX', 'RY', 'RZ'];
@@ -35,7 +35,7 @@ class ExtraGate extends ProgramStep {
   }
 }
 
-class PhaseGate extends ExtraGate {
+export class PhaseGate extends ExtraGate {
   angle: string;
 
   constructor (name: string, qubits: Array<number>, angle: string) {
