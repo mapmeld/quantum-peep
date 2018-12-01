@@ -72,3 +72,11 @@ export const SWAP = (q1: number, q2: number) => {
 export const RX = (angle: string, q1: number) => {
   return new PhaseGate('Rx', [q1], angle);
 };
+
+export const RY = (angle: string, q1: number) => {
+  return new PhaseGate('Ry', [q1], angle);
+};
+
+export const RZ = (angle: string, q1: number) => {
+  return new PhaseGate('Rz', [q1], angle);
+};

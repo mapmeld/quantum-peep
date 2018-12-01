@@ -1,5 +1,5 @@
 import { BasicGate } from './basicgate';
-import { PhaseGate, ExtraGate, SWAP, RX } from './extragates';
+import { PhaseGate, ExtraGate, SWAP, RX, RY, RZ } from './extragates';
 
 export const Gates = {
   X: (qubit: number) => {
@@ -38,6 +38,8 @@ export const Gates = {
   // non-basic
   SWAP: SWAP,
   RX: RX,
+  RY: RY,
+  RZ: RZ
 
   // CX: (qa: number, qb: number) => {
   //   return new BasicGate('CX', [qa, qb]);
