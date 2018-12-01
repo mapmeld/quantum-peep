@@ -1,5 +1,12 @@
 import { BasicGate } from './basicgate';
-import { PhaseGate, ExtraGate, SWAP, RX, RY, RZ } from './extragates';
+import {
+  PhaseGate,
+  ExtraGate,
+  CNOT, CCNOT, CZ,
+  CH, CRZ, CXBASE, CY,
+  SWAP, CSWAP, ISWAP, PSWAP,
+  RX, RY, RZ
+} from './extragates';
 
 export const Gates = {
   X: (qubit: number) => {
@@ -35,8 +42,22 @@ export const Gates = {
     return new BasicGate('I', [qubit]);
   },
 
-  // non-basic
+  // not basic: multiple qubits
+  CX: CNOT, CNOT: CNOT,
+  CCX: CCNOT, CCNOT: CCNOT,
+  CZ: CZ,
+  CH: CH,
+  CRZ: CRZ,
+  CXBASE: CXBASE,
+  CY: CY,
+
+  // not basic: swap
   SWAP: SWAP,
+  CSWAP: CSWAP,
+  ISWAP: ISWAP,
+  PSWAP: PSWAP,
+
+  // not basic: phase
   RX: RX,
   RY: RY,
   RZ: RZ

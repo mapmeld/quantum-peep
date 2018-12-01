@@ -46,11 +46,55 @@ test('DAGGER X only supported by some platforms', () => {
   expect(() => { x.code('q#') }).toThrow(Error);
 });
 
+test('CNOT/CX gates', () => {
+  let cc = Gates.CNOT(1, 2);
+  expect(cc.code('quil')).toBe('CNOT 1 2');
+  expect(cc.code('qasm')).toBe('cx q[1],q[2];');
+  expect(cc.code('q#')).toBe('CNOT(1, 2);');
+
+  let cc2 = Gates.CX(1, 2);
+  expect(cc2.code('quil')).toBe('CNOT 1 2');
+  expect(cc2.code('qasm')).toBe('cx q[1],q[2];');
+  expect(cc2.code('q#')).toBe('CNOT(1, 2);');
+
+  let cc3 = Gates.CXBASE(1, 2);
+  expect(() => { cc3.code('quil') }).toThrow(Error);
+  expect(cc3.code('qasm')).toBe('CX q[1],q[2];');
+  expect(() => { cc3.code('q#') }).toThrow(Error);
+});
+
+test('CCNOT/CCX gates', () => {
+  let cc = Gates.CCNOT(1, 2, 3);
+  expect(cc.code('quil')).toBe('CCNOT 1 2 3');
+  expect(cc.code('qasm')).toBe('ccx q[1],q[2],q[3];');
+  expect(cc.code('q#')).toBe('CCNOT(1, 2, 3);');
+
+  let cc2 = Gates.CCX(1, 2, 3);
+  expect(cc2.code('quil')).toBe('CCNOT 1 2 3');
+  expect(cc2.code('qasm')).toBe('ccx q[1],q[2],q[3];');
+  expect(cc2.code('q#')).toBe('CCNOT(1, 2, 3);');
+});
+
 test('SWAP gates', () => {
   let sw = Gates.SWAP(1, 2);
   expect(sw.code('quil')).toBe('SWAP 1 2');
   expect(sw.code('qasm')).toBe('swap q[1],q[2];');
   expect(sw.code('q#')).toBe('SWAP(1, 2);');
+
+  let sw2 = Gates.CSWAP(1, 2, 3);
+  expect(sw2.code('quil')).toBe('CSWAP 1 2 3');
+  expect(sw2.code('qasm')).toBe('cswap q[1],q[2],q[3];');
+  expect(() => { sw2.code('q#') }).toThrow(Error);
+
+  let sw3 = Gates.ISWAP(1, 2);
+  expect(sw3.code('quil')).toBe('ISWAP 1 2');
+  expect(() => { sw3.code('qasm') }).toThrow(Error);
+  expect(() => { sw3.code('q#') }).toThrow(Error);
+
+  let sw4 = Gates.PSWAP('pi', 1, 2);
+  expect(sw4.code('quil')).toBe('PSWAP(pi) 1 2');
+  expect(() => { sw4.code('qasm') }).toThrow(Error);
+  expect(() => { sw4.code('q#') }).toThrow(Error);
 });
 
 test('RX / RY / RZ gate', () => {

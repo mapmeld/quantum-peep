@@ -40,6 +40,25 @@ q2.run(p, runTimes, (body) => {
 });
 ```
 
+### More complex gates
+
+```javascript
+// gate names from different platforms are equivalent
+Gates.CNOT(control, target);
+Gates.CX(control, target);
+
+// swap operations
+Gates.SWAP(qubit1, qubit2);
+Gates.CSWAP(conditional, qubit1, qubit2);
+// ISWAP and PSWAP are only one-step operations in Quil? Advice welcome
+
+// phase gates: phase is a radian value stored as a string
+// IBM and Rigetti platforms accept expressions such as 'pi/2'
+// Q# expects a double; Quail will attempt to eval the radian string
+Gates.RX('0.1', qubit1);
+Gates.RY('pi/2', qubit2);
+```
+
 ## Goals
 
 - platform-agnostic: Rigetti, IBM, and potentially more providers
