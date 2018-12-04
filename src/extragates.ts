@@ -5,17 +5,17 @@ export class ExtraGate extends ProgramStep {
   qubits: Array<number>;
   static validGates: Array<string> = [
     'CNOT', 'CCNOT', 'CZ',
-    'CONTROLLED H', 'CONTROLLED RZ', 'CXBASE', 'CONTROLLED Y',
+    'Controlled H', 'Controlled Rz', 'CXBASE', 'Controlled Y',
     'SWAP', 'CSWAP', 'ISWAP', 'PSWAP',
-    'RX', 'RY', 'RZ'
+    'Rx', 'Ry', 'Rz'
   ];
 
   constructor (name: string, qubits: Array<number>) {
     super();
-    if (ExtraGate.validGates.indexOf(name.toUpperCase()) === -1) {
+    if (ExtraGate.validGates.indexOf(name) === -1) {
       throw new Error('Gate type unknown');
     }
-    this.name = name.toUpperCase();
+    this.name = name;
     this.qubits = qubits;
   }
 
@@ -42,12 +42,20 @@ export class ExtraGate extends ProgramStep {
       if (['CXBASE'].indexOf(this.name) > -1) {
         throw new Error(`${this.name} operation not supported on Quil`);
       }
-      return `${this.name} ${this.qubits.join(' ')}`;
+      return `${this.name.toUpperCase()} ${this.qubits.join(' ')}`;
     } else if (language === 'q#') {
-      if (['CSWAP', 'ISWAP', 'CZ', 'CONTROLLED H', 'CONTROLLED RZ', 'CXBASE', 'CONTROLLED Y'].indexOf(this.name) > -1) {
+      if (['ISWAP', 'CXBASE'].indexOf(this.name) > -1) {
         throw new Error(`${this.name} operation not supported on Q#`);
       }
-      return `${this.name}(${this.qubits.join(', ')});`;
+      let qsGate = this.name;
+      if (['CSWAP', 'CZ'].indexOf(qsGate) > -1) {
+        qsGate = qsGate.replace('C', 'Controlled ');
+      }
+      if (qsGate.indexOf('Controlled') > -1) {
+        return `${qsGate}([${this.qubits[0]}], ${this.qubits.slice(1).join(', ')});`;
+      } else {
+        return `${qsGate}(${this.qubits.join(', ')});`;
+      }
     } else if (language === 'qasm') {
       if (['ISWAP'].indexOf(this.name) > -1) {
         throw new Error(`${this.name} operation not supported on QASM`);
@@ -136,13 +144,13 @@ export const RZ = (angle: string, q1: number) => {
 
 // IBM only?
 export const CH = (q1: number, q2: number) => {
-  return new ExtraGate('CONTROLLED H', [q1, q2]);
+  return new ExtraGate('Controlled H', [q1, q2]);
 };
 export const CRZ = (angle: string, q1: number, q2: number) => {
-  return new PhaseGate('CONTROLLED RZ', [q1, q2], angle);
+  return new PhaseGate('Controlled Rz', [q1, q2], angle);
 };
 export const CY = (q1: number, q2: number) => {
-  return new ExtraGate('CONTROLLED Y', [q1, q2]);
+  return new ExtraGate('Controlled Y', [q1, q2]);
 };
 export const CXBASE = (q1: number, q2: number) => {
   return new ExtraGate('CXBASE', [q1, q2]);

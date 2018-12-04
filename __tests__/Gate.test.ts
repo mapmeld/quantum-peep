@@ -65,7 +65,7 @@ test('CNOT/CX gates', () => {
   let cc4 = Gates.CY(1, 2);
   expect(cc4.code('quil')).toBe('CONTROLLED Y 1 2');
   expect(cc4.code('qasm')).toBe('cy q[1],q[2];');
-  expect(() => { cc4.code('q#') }).toThrow(Error);
+  expect(cc4.code('q#')).toBe('Controlled Y([1], 2);');
 });
 
 test('CCNOT/CCX gates', () => {
@@ -89,7 +89,7 @@ test('SWAP gates', () => {
   let sw2 = Gates.CSWAP(1, 2, 3);
   expect(sw2.code('quil')).toBe('CSWAP 1 2 3');
   expect(sw2.code('qasm')).toBe('cswap q[1],q[2],q[3];');
-  expect(() => { sw2.code('q#') }).toThrow(Error);
+  expect(sw2.code('q#')).toBe('Controlled SWAP([1], 2, 3);');
 
   let sw3 = Gates.ISWAP(1, 2);
   expect(sw3.code('quil')).toBe('ISWAP 1 2');
