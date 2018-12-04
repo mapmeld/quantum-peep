@@ -5,7 +5,7 @@ export class ExtraGate extends ProgramStep {
   qubits: Array<number>;
   static validGates: Array<string> = [
     'CNOT', 'CCNOT', 'CZ',
-    'CH', 'CRZ', 'CXBASE', 'CY',
+    'CONTROLLED H', 'CONTROLLED RZ', 'CXBASE', 'CONTROLLED Y',
     'SWAP', 'CSWAP', 'ISWAP', 'PSWAP',
     'RX', 'RY', 'RZ'
   ];
@@ -20,7 +20,7 @@ export class ExtraGate extends ProgramStep {
   }
 
   qasmVersion (quil_name: string) {
-    quil_name = quil_name.toLowerCase();
+    quil_name = quil_name.toLowerCase().replace('controlled ', 'c');
     switch (quil_name) {
       case 'ccnot':
         return 'ccx';
@@ -39,12 +39,12 @@ export class ExtraGate extends ProgramStep {
 
   code (language: string) {
     if (language === 'quil') {
-      if (['CH', 'CRZ', 'CXBASE', 'CY'].indexOf(this.name) > -1) {
+      if (['CXBASE'].indexOf(this.name) > -1) {
         throw new Error(`${this.name} operation not supported on Quil`);
       }
       return `${this.name} ${this.qubits.join(' ')}`;
     } else if (language === 'q#') {
-      if (['CSWAP', 'ISWAP', 'CZ', 'CH', 'CRZ', 'CXBASE', 'CY'].indexOf(this.name) > -1) {
+      if (['CSWAP', 'ISWAP', 'CZ', 'CONTROLLED H', 'CONTROLLED RZ', 'CXBASE', 'CONTROLLED Y'].indexOf(this.name) > -1) {
         throw new Error(`${this.name} operation not supported on Q#`);
       }
       return `${this.name}(${this.qubits.join(', ')});`;
@@ -136,14 +136,14 @@ export const RZ = (angle: string, q1: number) => {
 
 // IBM only?
 export const CH = (q1: number, q2: number) => {
-  return new ExtraGate('CH', [q1, q2]);
+  return new ExtraGate('CONTROLLED H', [q1, q2]);
 };
 export const CRZ = (angle: string, q1: number, q2: number) => {
-  return new PhaseGate('CRZ', [q1, q2], angle);
+  return new PhaseGate('CONTROLLED RZ', [q1, q2], angle);
+};
+export const CY = (q1: number, q2: number) => {
+  return new ExtraGate('CONTROLLED Y', [q1, q2]);
 };
 export const CXBASE = (q1: number, q2: number) => {
   return new ExtraGate('CXBASE', [q1, q2]);
-};
-export const CY = (q1: number, q2: number) => {
-  return new ExtraGate('CY', [q1, q2]);
 };

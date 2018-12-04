@@ -61,6 +61,11 @@ test('CNOT/CX gates', () => {
   expect(() => { cc3.code('quil') }).toThrow(Error);
   expect(cc3.code('qasm')).toBe('CX q[1],q[2];');
   expect(() => { cc3.code('q#') }).toThrow(Error);
+
+  let cc4 = Gates.CY(1, 2);
+  expect(cc4.code('quil')).toBe('CONTROLLED Y 1 2');
+  expect(cc4.code('qasm')).toBe('cy q[1],q[2];');
+  expect(() => { cc4.code('q#') }).toThrow(Error);
 });
 
 test('CCNOT/CCX gates', () => {
