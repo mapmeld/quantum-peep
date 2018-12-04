@@ -2,6 +2,7 @@ import { ProgramStep } from './programstep';
 
 export class BasicGate extends ProgramStep {
   name: string;
+  inverse: boolean;
   qubits: Array<number>;
   static validGates: Array<string> = ['X', 'Y', 'Z', 'H', 'S', 'T', 'DAGGER S', 'DAGGER T', 'I'];
 
@@ -10,32 +11,33 @@ export class BasicGate extends ProgramStep {
     if (BasicGate.validGates.indexOf(name.toUpperCase()) === -1) {
       throw new Error('Gate type unknown');
     }
-    this.name = name.toUpperCase();
     this.qubits = qubits;
+    this.inverse = (name.indexOf('DAGGER') === 0);
+    this.name = name.toUpperCase().replace('DAGGER ', '');
   }
 
   qasmVersion (quil_name: string) {
     quil_name = quil_name.toLowerCase();
-    switch (quil_name) {
-      case 'i':
-        return 'id';
-      case 'dagger s':
+    if (quil_name === 'i') {
+      return 'id';
+    } else if (this.inverse) {
+      if (quil_name === 's') {
         return 'sdg';
-      case 'dagger t':
+      } else if (quil_name === 't') {
         return 'tdg';
+      } else {
+        throw new Error('Dagger of gates other than S and T not supported for QASM');
+      }
     }
-    if (quil_name.indexOf('dagger') === 0) {
-      throw new Error('Dagger of gates other than S and T not supported for QASM');
-    } else {
-      return quil_name;
-    }
+    return quil_name;
   }
 
   dagger () {
-    // available on Quil at least
-    if (this.name.indexOf('DAGGER') !== 0) {
-      this.name = 'DAGGER ' + this.name;
-    }
+    this.inverse = true;
+  }
+
+  adjoint () {
+    this.inverse = true;
   }
 
   qubitsUsed () {
@@ -44,12 +46,9 @@ export class BasicGate extends ProgramStep {
 
   code (language: string) {
     if (language === 'quil') {
-      return `${this.name} ${this.qubits.join(' ')}`;
+      return `${this.inverse ? 'DAGGER ' : ''}${this.name} ${this.qubits.join(' ')}`;
     } else if (language === 'q#') {
-      if (this.name.indexOf('DAGGER') === 0) {
-        throw new Error('Dagger of gates not supported for Q#');
-      }
-      return `${this.name}(${this.qubits.join(' ')});`;
+      return `${this.inverse ? 'Adjoint ' : ''}${this.name}(${this.qubits.join(' ')});`;
     } else if (language === 'qasm') {
       return `${this.qasmVersion(this.name)} q[${this.qubits.join(' ')}];`;
     }

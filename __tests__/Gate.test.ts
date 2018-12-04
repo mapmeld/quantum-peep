@@ -22,7 +22,7 @@ test('Gate Dagger S', () => {
   let sdg = Gates.SDAG(1);
   expect(sdg.code('quil')).toBe('DAGGER S 1');
   expect(sdg.code('qasm')).toBe('sdg q[1];');
-  //expect(sdg.code('q#')).toBe('DAGGER S(1);');
+  expect(sdg.code('q#')).toBe('Adjoint S(1);');
 });
 
 test('Gate T and add DAGGER later', () => {
@@ -30,7 +30,7 @@ test('Gate T and add DAGGER later', () => {
   tdg.dagger();
   expect(tdg.code('quil')).toBe('DAGGER T 1');
   expect(tdg.code('qasm')).toBe('tdg q[1];');
-  expect(() => { tdg.code('q#') }).toThrow(Error);
+  expect(tdg.code('q#')).toBe('Adjoint T(1);');
 
   // subsequent adds don't do anything (should this throw an error?)
   tdg.dagger();
@@ -38,12 +38,12 @@ test('Gate T and add DAGGER later', () => {
 
 });
 
-test('DAGGER X only supported by some platforms', () => {
+test('DAGGER X only supported by some platforms?', () => {
   let x = Gates.X(1);
   x.dagger();
   expect(x.code('quil')).toBe('DAGGER X 1');
   expect(() => { x.code('qasm') }).toThrow(Error);
-  expect(() => { x.code('q#') }).toThrow(Error);
+  expect(x.code('q#')).toBe('Adjoint X(1);');
 });
 
 test('CNOT/CX gates', () => {
