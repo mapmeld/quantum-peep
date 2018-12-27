@@ -32,6 +32,17 @@ export class BasicGate extends ProgramStep {
     return quil_name;
   }
 
+  cirqVersion (quil_name: string) {
+    quil_name = quil_name.toUpperCase();
+    if (quil_name === 'I') {
+      throw new Error('Identity gate unknown in Cirq');
+    }
+    if (this.inverse) {
+      throw new Error('No dagger gates supported in Cirq');      
+    }
+    return quil_name;
+  }
+
   dagger () {
     this.inverse = true;
   }
@@ -51,6 +62,8 @@ export class BasicGate extends ProgramStep {
       return `${this.inverse ? 'Adjoint ' : ''}${this.name}(${this.qubits.join(' ')});`;
     } else if (language === 'qasm') {
       return `${this.qasmVersion(this.name)} q[${this.qubits.join(' ')}];`;
+    } else if (language === 'cirq') {
+      return `cirq.${this.cirqVersion(this.name)}(${this.qubits.map(q => `q_${q}`).join(', ')})`;
     }
     return '';
   }

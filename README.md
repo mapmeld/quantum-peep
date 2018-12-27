@@ -2,7 +2,8 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/mapmeld/quantum-quail.svg)](https://greenkeeper.io/)
 
-Work in progress - rewrite of jsQuil quantum computer programming library
+Work in progress - build quantum programs that are platform-agnostic -
+compile for IBM's QASM, Rigetti's Quil, Microsoft's Q#, or Google's Cirq.
 
 <img src="https://raw.githubusercontent.com/mapmeld/quantum-quail/master/quail-logo.png" width="300"/>
 
@@ -18,6 +19,9 @@ p.measure(1, 2);
 
 // get Microsoft's Q# code
 p.code('q#');
+
+// get Python code for Google Cirq
+p.code('cirq');
 
 // run on Rigetti QVM - working on non-simulator options and queues
 let q = new QProcessor('rigetti', {
@@ -52,18 +56,17 @@ Gates.SWAP(qubit1, qubit2);
 Gates.CSWAP(conditional, qubit1, qubit2);
 // ISWAP and PSWAP are only one-step operations in Quil? Advice welcome
 
-// phase gates: phase is a radian value stored as a string
-// IBM and Rigetti platforms accept expressions such as 'pi/2'
-// Q# expects a double; Quail will attempt to eval the radian string
-Gates.RX('0.1', qubit1);
-Gates.RY('pi/2', qubit2);
+// phase gates: phase is a radian value
+// use this shorthand to express on several different platforms
+
+import { pi_multipled_by, pi_divided_by } from 'quantum-quail';
+Gates.RX(pi_multiplied_by(0.45), qubit1);
+Gates.RY(pi_divided_by(2), qubit2);
 ```
 
 ## Goals
 
-- platform-agnostic: Rigetti, IBM, and potentially more providers
 - async/queue support: for newer APIs which put programs in a queue
-- TypeScript: for more structure and my own benefit
 - browser JS distribution: for use in web apps
 
 ## Language references
@@ -76,6 +79,9 @@ http://docs.rigetti.com/en/stable/compiler.html
 
 Microsoft Q#
 https://docs.microsoft.com/en-us/quantum/language/?view=qsharp-preview
+
+Google Cirq
+https://github.com/quantumlib/Cirq
 
 ## License
 

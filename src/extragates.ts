@@ -33,6 +33,17 @@ export class ExtraGate extends ProgramStep {
     }
   }
 
+  cirqVersion (quil_name: string) {
+    quil_name = quil_name.toUpperCase();
+    if (['CXBASE', 'CCNOT', 'PSWAP', 'CONTROLLED Y'].indexOf(quil_name) > -1) {
+      throw new Error('Gate not supported in Cirq');
+    }
+    if (quil_name[0] === 'R') {
+      quil_name = quil_name.substring(1);
+    }
+    return quil_name;
+  }
+
   qubitsUsed () {
     return this.qubits;
   }
@@ -61,15 +72,20 @@ export class ExtraGate extends ProgramStep {
         throw new Error(`${this.name} operation not supported on QASM`);
       }
       return `${this.qasmVersion(this.name)} ${this.qubits.map(q => `q[${q}]`).join(',')};`;
+    } else if (language === 'cirq') {
+      return `cirq.${this.cirqVersion(this.name)}(${this.qubits.map(q => `q_${q}`).join(', ')})`;
     }
     return '';
   }
 }
 
 export class PhaseGate extends ExtraGate {
-  angle: string;
+  angle: {
+    number: number,
+    action: string
+  };
 
-  constructor (name: string, qubits: Array<number>, angle: string) {
+  constructor (name: string, qubits: Array<number>, angle: { number: number, action: string }) {
     super(name, qubits);
     this.name = name;
     this.angle = angle;
@@ -77,26 +93,23 @@ export class PhaseGate extends ExtraGate {
 
   code (language: string) {
     if (language === 'quil') {
-      return `${this.name.toUpperCase()}(${this.angle}) ${this.qubits.join(' ')}`;
+      let anglestr = (this.angle.action === 'multiply') ? (this.angle.number + 'pi') : ('pi/' + this.angle.number);
+      return `${this.name.toUpperCase()}(${anglestr}) ${this.qubits.join(' ')}`;
     } else if (language === 'q#') {
       if (['PSWAP'].indexOf(this.name) > -1) {
         throw new Error(`${this.name} operation not supported on Q#`);
       }
-      if (isNaN(Number(this.angle))) {
-        if (this.angle.replace(/[\s\d\/\*]/g, '').replace(/pi/ig, '').length === 0) {
-          let anglenum = eval(this.angle.replace('pi', 'Math.PI')).toFixed(3);
-          return `${this.name}(${anglenum}, ${this.qubits.join(', ')});`;
-        } else {
-          throw new Error('Cannot parse advanced math to double for Q# output');
-        }
-      } else {
-        return `${this.name}(${this.angle}, ${this.qubits.join(', ')});`;
-      }
+      let anglestr = (this.angle.action === 'multiply') ? (Math.PI * this.angle.number) : (Math.PI / this.angle.number);
+      return `${this.name}(${anglestr.toFixed(3)}, ${this.qubits.join(', ')});`;
     } else if (language === 'qasm') {
       if (['PSWAP'].indexOf(this.name) > -1) {
         throw new Error(`${this.name} operation not supported on QASM`);
       }
-      return `${this.qasmVersion(this.name)}(${this.angle}) ${this.qubits.map(q => `q[${q}]`).join(',')};`;
+      let anglestr = (this.angle.action === 'multiply') ? (this.angle.number + 'pi') : ('pi/' + this.angle.number);
+      return `${this.qasmVersion(this.name)}(${anglestr}) ${this.qubits.map(q => `q[${q}]`).join(',')};`;
+    } else if (language === 'cirq') {
+      let anglestr = (this.angle.action === 'multiply') ? this.angle.number : (1 / this.angle.number);
+      return `cirq.${this.cirqVersion(this.name)}(${this.qubits.map(q => `q_${q}`).join(', ')}) ** ${anglestr.toFixed(3)}`;
     }
     return '';
   }
@@ -126,19 +139,19 @@ export const ISWAP = (q1: number, q2: number) => {
   return new ExtraGate('ISWAP', [q1, q2]);
 };
 
-export const PSWAP = (angle: string, q1: number, q2: number) => {
+export const PSWAP = (angle: { number: number, action: string }, q1: number, q2: number) => {
   return new PhaseGate('PSWAP', [q1, q2], angle);
 };
 
-export const RX = (angle: string, q1: number) => {
+export const RX = (angle: { number: number, action: string }, q1: number) => {
   return new PhaseGate('Rx', [q1], angle);
 };
 
-export const RY = (angle: string, q1: number) => {
+export const RY = (angle: { number: number, action: string }, q1: number) => {
   return new PhaseGate('Ry', [q1], angle);
 };
 
-export const RZ = (angle: string, q1: number) => {
+export const RZ = (angle: { number: number, action: string }, q1: number) => {
   return new PhaseGate('Rz', [q1], angle);
 };
 
@@ -146,7 +159,7 @@ export const RZ = (angle: string, q1: number) => {
 export const CH = (q1: number, q2: number) => {
   return new ExtraGate('Controlled H', [q1, q2]);
 };
-export const CRZ = (angle: string, q1: number, q2: number) => {
+export const CRZ = (angle: { number: number, action: string }, q1: number, q2: number) => {
   return new PhaseGate('Controlled Rz', [q1, q2], angle);
 };
 export const CY = (q1: number, q2: number) => {
