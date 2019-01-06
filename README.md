@@ -64,10 +64,31 @@ Gates.RX(pi_multiplied_by(0.45), qubit1);
 Gates.RY(pi_divided_by(2), qubit2);
 ```
 
+### Bonus features
+
+Output a circuit diagram with this library ported from QISKit Python: https://github.com/mapmeld/quantum-circuit-viz
+
+```javascript
+import { textViz } from 'quantum-circuit-viz';
+...
+program.add(Gates.X(1));
+program.measure(1, 2);
+textViz(program);
+```
+
+```
+        ┌───┐┌─┐
+q_1: |0>┤ X ├┤M├
+        └───┘└╥┘
+ c_2: 0 ══════╩═
+```
+
 ## Goals
 
+- work with experimental results from APIs
+- more complex conditional / GOTO output in assembly languages
 - async/queue support: for newer APIs which put programs in a queue
-- browser JS distribution: for use in web apps
+- browser JS distribution: easier use in web apps
 
 ## Language references
 
