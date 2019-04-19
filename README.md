@@ -1,16 +1,16 @@
-# Quantum-Quail
+# Quantum-Peep
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/mapmeld/quantum-quail.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/mapmeld/quantum-peep.svg)](https://greenkeeper.io/)
 
 Work in progress - build quantum programs that are platform-agnostic -
 compile for IBM's QASM, Rigetti's Quil, Microsoft's Q#, or Google's Cirq.
 
-<img src="https://raw.githubusercontent.com/mapmeld/quantum-quail/master/quail-logo.png" width="300"/>
+<img src="https://raw.githubusercontent.com/mapmeld/quantum-peep/master/quail-logo.png" width="300"/>
 
 ## Example code
 
 ```javascript
-import { Gates, Program, RigettiProcessor, IBMProcessor } from 'quantum-quail';
+import { Gates, Program, RigettiProcessor, IBMProcessor } from 'quantum-peep';
 
 // write your quantum gates and measurements into a program
 let p = new Program();
@@ -71,7 +71,7 @@ Gates.CSWAP(conditional, qubit1, qubit2);
 // phase gates: phase is a radian value
 // use this shorthand to express on several different platforms
 
-import { pi_multipled_by, pi_divided_by } from 'quantum-quail';
+import { pi_multipled_by, pi_divided_by } from 'quantum-peep';
 Gates.RX(pi_multiplied_by(0.45), qubit1);
 Gates.RY(pi_divided_by(2), qubit2);
 ```
