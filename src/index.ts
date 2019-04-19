@@ -1,6 +1,6 @@
 export { Gates } from './gates';
 export { Program } from './programs';
-export { QProcessor } from './processors';
+export { RigettiProcessor, IBMProcessor } from './processors';
 
 /* use these as shorthand for radians: pi/4, 0.28pi, etc. */
 let pi_multiplied_by = (n: number) => {

@@ -1,4 +1,4 @@
-import { Gates, Program, QProcessor } from '../src';
+import { Gates, Program, RigettiProcessor, IBMProcessor } from '../src';
 
 // Travis / prod ENV vars for secrets
 let secrets = {
@@ -20,29 +20,46 @@ test('blank test', (done) => {
   done();
 });
 
-// test('one gate then measure program sent to Rigetti', (done) => {
-//   let xgate = Gates.X(1);
-//   let p = new Program();
-//   p.add(xgate);
-//   p.measure(1, 2);
-//
-//   let q = new QProcessor('rigetti', {
-//     api_key: secrets.rigetti.api_key || '',
-//     user_id: secrets.rigetti.user_id || ''
-//   });
-//   q.run(p, 1, (body: string) => {
-//     console.log(body);
-//     done();
-//   });
-// }, 10000);
-//
+test('device list from Rigetti', (done) => {
+  let q = new RigettiProcessor({
+    api_key: secrets.rigetti.api_key || '',
+    user_id: secrets.rigetti.user_id || ''
+  });
+
+  q.devices((devices: object) => {
+    //console.log(devices);
+    expect(Object.keys(devices).length).toBeGreaterThan(0);
+    expect(devices).toHaveProperty('Aspen-3');
+    done();
+  });
+});
+
+test('one gate then measure program sent to Rigetti', (done) => {
+  let xgate = Gates.X(1);
+  let p = new Program();
+  p.add(xgate);
+  p.measure(1, 2);
+
+  let q = new RigettiProcessor({
+    api_key: secrets.rigetti.api_key || '',
+    user_id: secrets.rigetti.user_id || ''
+  });
+  q.run(p, 1, (body: string) => {
+    console.log(body);
+    done();
+  });
+}, 10000);
+
 // test('one gate then measure program sent to IBM', (done) => {
 //   let xgate = Gates.X(1);
 //   let p = new Program();
 //   p.add(xgate);
 //   p.measure(1, 2);
 //
-//   let q = new QProcessor('ibm', { login: secrets.ibm.login, processor: 'simulator' });
+//   let q = new IBMProcessor({
+    //   login: secrets.ibm.login,
+    //   processor: 'simulator'
+    // });
 //   q.run(p, 2, (body: string) => {
 //     console.log(body);
 //     done();

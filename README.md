@@ -10,7 +10,7 @@ compile for IBM's QASM, Rigetti's Quil, Microsoft's Q#, or Google's Cirq.
 ## Example code
 
 ```javascript
-import { Gates, Program, QProcessor } from 'quantum-quail';
+import { Gates, Program, RigettiProcessor, IBMProcessor } from 'quantum-quail';
 
 // write your quantum gates and measurements into a program
 let p = new Program();
@@ -24,7 +24,7 @@ p.code('q#');
 p.code('cirq');
 
 // run on Rigetti QVM - working on non-simulator options and queues
-let q = new QProcessor('rigetti', {
+let q = new RigettiProcessor({
   api_key: 'aaa',
   user_id: 'uuu',
   processor: 'simulator'
@@ -35,7 +35,7 @@ q.run(p, runTimes, (body) => {
 });
 
 // run on IBM quantum chip - working on chip options and queues
-let q2 = new QProcessor('ibm', {
+let q2 = new IBMProcessor({
   login: secrets.ibm.token,
   processor: 'ibmqx4'
 });

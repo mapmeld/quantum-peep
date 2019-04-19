@@ -4,38 +4,42 @@ import { Program } from './programs';
 const request = require('request');
 const Cloud = require('@qiskit/cloud');
 
-export class QProcessor {
-  provider: string;
+class QProcessor {
   connection: {
-    endpoint: string,
     api_key: string,
     user_id: string,
     login: string,
     processor: string
   };
 
-  constructor (provider: string, { endpoint='', api_key='', user_id='', login='', processor='simulator' } : { endpoint?: string, api_key?: string, user_id?: string, login?: string, processor?: string }) {
-    this.provider = provider;
-    if (provider === 'rigetti') {
-      endpoint = endpoint || 'https://api.rigetti.com/qvm';
-    }
-    this.connection = { endpoint, api_key, user_id, login, processor };
+  constructor ({ endpoint='', api_key='', user_id='', login='', processor='simulator' } : { endpoint?: string, api_key?: string, user_id?: string, login?: string, processor?: string }) {
+    this.connection = { api_key, user_id, login, processor };
   }
 
   run (program: Program, iterations: number, callback: (body: string) => void) {
-    if (this.provider === 'rigetti') {
-      this.runRigetti(program, iterations, callback);
-    } else if (this.provider === 'ibm') {
-      this.runIBM(program, iterations, callback);
-    }
   }
 
-  runRigetti (program: Program, iterations: number, callback: (body: string) => void) {
+  devices (callback: (devices: object) => void) {
+  }
+}
+
+export class RigettiProcessor extends QProcessor {
+  endpoint: string;
+
+  constructor ({ endpoint='', api_key='', user_id='', login='', processor='simulator' } : { endpoint?: string, api_key?: string, user_id?: string, login?: string, processor?: string }) {
+    super(arguments[0] || {});
+    this.endpoint = endpoint || 'https://forest-server.qcs.rigetti.com';
+    // QVM was 'https://api.rigetti.com/qvm';
+  }
+
+  run (program: Program, iterations: number, callback: (body: string) => void) {
     let payload = {
-      type: 'multishot',
-      addresses: program.registersUsed(),
+      type: 'multishot-measure',
+      qubits: program.qubitsUsed(),
+      //addresses: program.registersUsed(),
       trials: iterations,
-      'quil-instructions': program.code('quil')
+      'compiled-quil': program.code('quil')
+      // 'rng-seed':
     };
     // if (this.gate_noise) {
     //   payload['gate-noise'] = this.gate_noise;
@@ -45,7 +49,7 @@ export class QProcessor {
     // }
 
     request.post({
-      url: this.connection.endpoint,
+      url: this.endpoint + '',
       headers: {
         'X-Api-Key': this.connection.api_key,
         'X-User-Id': this.connection.user_id,
@@ -58,7 +62,28 @@ export class QProcessor {
     });
   }
 
-  runIBM (program: Program, iterations: number, callback: (body: string) => void) {
+  devices (callback: (devices: object) => void) {
+    request.get({
+      url: this.endpoint + '/devices',
+      headers: {
+        'X-Api-Key': this.connection.api_key,
+        'X-User-Id': this.connection.user_id,
+        //'Content-Type': 'application/json; charset=utf-8',
+        'Accept': 'application/octet-stream'
+      }
+    }, (err: object, response: object, body: string) => {
+      let jsresponse = JSON.parse(body);
+      callback(jsresponse.devices || {});
+    });
+  }
+}
+
+export class IBMProcessor extends QProcessor {
+  constructor ({ endpoint='', api_key='', user_id='', login='', processor='simulator' } : { endpoint?: string, api_key?: string, user_id?: string, login?: string, processor?: string }) {
+    super(arguments[0] || {});
+  }
+
+  run (program: Program, iterations: number, callback: (body: string) => void) {
     const cloud = new Cloud();
     cloud.login(this.connection.login).then(() => {
       cloud.backends().then((res: object) => {
@@ -73,5 +98,9 @@ export class QProcessor {
           });
       });
     });
+  }
+
+  devices (callback: (devices: object) => void) {
+
   }
 }
