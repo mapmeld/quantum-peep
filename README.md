@@ -23,21 +23,33 @@ p.code('q#');
 // get Python code for Google Cirq
 p.code('cirq');
 
-// run on Rigetti QVM - working on non-simulator options and queues
+// run on Rigetti QVM Docker container
+// You can use my server here (does not receive API key or User ID credentials)
+// For actual QPUs, register for Rigetti Forest and use their endpoint, api_key, and user_id
 let q = new RigettiProcessor({
+  endpoint: 'http://165.227.62.245:5000',
   api_key: 'aaa',
-  user_id: 'uuu',
-  processor: 'simulator'
+  user_id: 'uuu'
 });
 let runTimes = 10;
 q.run(p, runTimes, (body) => {
   console.log(JSON.parse(body));
 });
 
-// run on IBM quantum chip - working on chip options and queues
+// fetch device options + status from https://forest-server.qcs.rigetti.com/devices
+q.devices((deviceInfo) => {
+  // { "Aspen-4": { "is_online": false, ... }, "Aspen-3": { ... } }
+});
+
+// run on IBM quantum chip
 let q2 = new IBMProcessor({
   login: secrets.ibm.token,
   processor: 'ibmqx4'
+});
+// fetch device options + status from https://quantumexperience.ng.bluemix.net/api/Backends/ibmqx4
+// uses given processor type
+q2.devices((deviceInfo) => {
+  // { "id": "ibmqx4", "status": "on", ... }
 });
 q2.run(p, runTimes, (body) => {
   console.log(JSON.parse(body));

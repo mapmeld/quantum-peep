@@ -22,7 +22,7 @@ class Measure extends ProgramStep {
   code (language: string) {
     switch (language) {
       case 'quil':
-        return `MEASURE ${this.qubit} [${this.register}]`;
+        return `MEASURE ${this.qubit} ro[${this.register}]`;
       case 'q#':
         return `let reg${this.register} = M(${this.qubit});`;
       case 'qasm':
@@ -68,7 +68,15 @@ export class Program {
 
     // works until we embed programs
     switch (language) {
-      // AFAIK quil does not have this type of prefix/suffix
+      case 'quil':
+        let regmax = -1;
+        this.registersUsed().forEach((reg) => {
+          regmax = Math.max(reg + 1, regmax);
+        });
+        if (regmax > -1) {
+          start = `DECLARE ro BIT[${regmax}]\n`;
+        }
+        break;
       case 'q#':
         // something like https://docs.microsoft.com/en-us/quantum/quickstart?view=qsharp-preview&tabs=tabid-vs2017
         break;
