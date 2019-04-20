@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="author" content="Nick Doiron"/>
+    <meta name="description" content="Cross-platform JavaScript module for gate-based quantum computing"/>
+    <title>Quantum Peep</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+    <style>
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+h1 {
+  text-align: center;
+}
+p, code {
+  text-align: left;
+}
+code {
+  display: block;
+  background: #eee;
+  color: #555;
+  margin-bottom: 5px;
+  line-height: 150%;
+}
+.mx-auto {
+  text-align: center;
+}
+.row {
+  margin-bottom: 24px;
+}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 mx-auto">
+	        <h1>Quantum Peep</h1>
+          <p>Cross-platform JavaScript module for gate-based quantum computing</p>
+          <code>npm install quantum-peep</code>
+          <br/>
+	  <a class="btn btn-success mx-auto" href="https://github.com/mapmeld/quantum-peep">View GitHub</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <h3>Write once</h3>
+          <p>A quantum algorithm starts out with a small number of qubits, which then
+          have their state modified or interact with each other through
+          <a href="https://en.wikipedia.org/wiki/Quantum_logic_gate">quantum logic gates</a>.</p>
+          <p>Here, we use an X gate and a CNOT gate, measure qubit values, and store each value in classical registers.</p>
+          <code>
+let p = new Program();
+<br/>
+p.add(Gates.X(0));
+<br/>
+p.add(Gates.CNOT(0, 1));
+<br/>
+p.measure(0, 1);
+<br/>
+p.measure(1, 2);
+          </code>
+        </div>
+        <div class="col-sm-4">
+          <h3>Run anywhere</h3>
+          <p>Programs can be output using IBM's QASM, Rigetti's Quil, Microsoft's Q#, and Google's Cirq syntax.</p>
+          <code>
+s = Gates.S(1);<br/>
+s.dagger();<br/>
+s.code('quil')<br/>
+> 'DAGGER S 1'<br/>
+s.code('q#')<br/>
+> 'Adjoint S(1);'<br/>
+s.code('qasm')<br/>
+> 'sdg q[1];'<br/>
+</code>
+          <p>When platforms differ on names or shorthand for a gate, there are multiple aliases with identical outputs.</p>
+          <code>
+sdag = Gates.SDAG(1);<br/>
+s.code('q#')<br/>
+> 'Adjoint S(1);'
+          </code>
+        </div>
+        <div class="col-sm-4">
+          <h3>Real quantum chips</h3>
+          <p>Quantum-Peep helps send jobs to IBM's and Rigetti's cloud computing services with an easy-to-understand syntax:</p>
+          <code>
+          let q = new RigettiProcessor({<br/>
+          &nbsp;&nbsp;api_key: 'aaa', user_id: 'uuu',<br/>
+          &nbsp;&nbsp;endpoint: 'http://165.227.62.245:5000'
+          });<br/>
+          let runTimes = 10;<br/>
+          q.run(pcode, runTimes, (body) => {<br/>
+          &nbsp;&nbsp;console.log(body);<br/>
+          });<br/>
+          </code>
+          <p>The given endpoint is a virtual machine for immediate testing. IBM's returns a Task ID which is queued to run on a quantum chip.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <h4>Open source</h4>
+          <p>Quantum-Peep is written in TypeScript and is released under an MIT license</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
