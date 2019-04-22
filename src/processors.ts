@@ -1,7 +1,7 @@
 
 import { Program } from './programs';
 
-const request = require('request');
+const fetch = require('node-fetch');
 const Cloud = require('@qiskit/cloud');
 
 class QProcessor {
@@ -16,7 +16,7 @@ class QProcessor {
     this.connection = { api_key, user_id, login, processor };
   }
 
-  run (program: Program, iterations: number, callback: (body: string) => void) {
+  run (program: Program, iterations: number, callback: (body: object) => void) {
   }
 
   devices (callback: (devices: object) => void) {
@@ -31,7 +31,7 @@ export class RigettiProcessor extends QProcessor {
     this.endpoint = endpoint || 'https://forest-server.qcs.rigetti.com';
   }
 
-  run (program: Program, iterations: number, callback: (body: string) => void) {
+  run (program: Program, iterations: number, callback: (body: object) => void) {
     let payload = {
       type: 'multishot-measure',
       qubits: program.qubitsUsed(),
@@ -57,25 +57,26 @@ export class RigettiProcessor extends QProcessor {
       relevantHeaders['X-User-Id'] = this.connection.user_id;
     }
 
-    request.post({
-      url: this.endpoint,
+    fetch(this.endpoint, {
+      method: 'post',
       headers: relevantHeaders,
-      json: payload
-    }, (err: object, response: object, body: string) => {
+      body: JSON.stringify(payload)
+    })
+    .then((res: { json: () => {} }) => res.json())
+    .then((body: object) => {
       callback(body);
     });
   }
 
   devices (callback: (devices: object) => void) {
-    request.get({
-      url: this.endpoint + '/devices',
+    fetch(this.endpoint + '/devices', {
       headers: {
         'X-Api-Key': this.connection.api_key,
         'X-User-Id': this.connection.user_id,
         'Accept': 'application/octet-stream'
       }
-    }, (err: object, response: object, body: string) => {
-      let jsresponse = JSON.parse(body);
+    }).then((res: { json: () => {} }) => res.json())
+    .then((jsresponse: { devices: object }) => {
       callback(jsresponse.devices || {});
     });
   }
@@ -86,18 +87,16 @@ export class IBMProcessor extends QProcessor {
     super(arguments[0] || {});
   }
 
-  run (program: Program, iterations: number, callback: (body: string) => void) {
+  run (program: Program, iterations: number, callback: (body: object) => void) {
     const cloud = new Cloud();
     cloud.login(this.connection.login).then(() => {
       cloud.backends().then((res: object) => {
-        console.log(res);
-
         cloud.run(program.code('qasm'), {
             backend: this.connection.processor,
             shots: iterations
           })
           .then((res2: object) => {
-            callback(JSON.stringify(res2));
+            callback(res2);
           });
       });
     });
@@ -107,9 +106,10 @@ export class IBMProcessor extends QProcessor {
     if (!this.connection.processor || this.connection.processor === 'simulator') {
       return {};
     }
-    request.get(`https://quantumexperience.ng.bluemix.net/api/Backends/${this.connection.processor}`, (err: object, response: object, body: string) => {
-      let jsresponse = JSON.parse(body);
-      callback(jsresponse || {});
-    });
+    fetch(`https://quantumexperience.ng.bluemix.net/api/Backends/${this.connection.processor}`)
+      .then((res: { json: () => {} }) => res.json())
+      .then((jsresponse: {id: string, status: string}) => {
+        callback(jsresponse || { id: '', status: '' });
+      });
   }
 }
