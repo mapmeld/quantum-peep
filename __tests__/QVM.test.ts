@@ -29,7 +29,7 @@ test('device list from Rigetti', (done) => {
   q.devices((devices: object) => {
     console.log(devices);
     expect(Object.keys(devices).length).toBeGreaterThan(0);
-    expect(devices).toHaveProperty('Aspen-3');
+    expect(devices).toHaveProperty('Aspen-4');
     done();
   });
 });
