@@ -27,7 +27,7 @@ p.code('cirq');
 // You can use my server here (does not receive API key or User ID credentials)
 // For actual QPUs, register for Rigetti Forest and use their endpoint, api_key, and user_id
 let q = new RigettiProcessor({
-  endpoint: 'http://165.227.62.245:5000',
+  endpoint: 'http://167.99.232.33:5000',
   api_key: 'aaa',
   user_id: 'uuu'
 });

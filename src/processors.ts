@@ -69,13 +69,7 @@ export class RigettiProcessor extends QProcessor {
   }
 
   devices (callback: (devices: object) => void) {
-    fetch(this.endpoint + '/devices', {
-      headers: {
-        'X-Api-Key': this.connection.api_key,
-        'X-User-Id': this.connection.user_id,
-        'Accept': 'application/octet-stream'
-      }
-    }).then((res: { json: () => {} }) => res.json())
+    fetch(this.endpoint + '/devices').then((res: { json: () => {} }) => res.json())
     .then((jsresponse: { devices: object }) => {
       callback(jsresponse.devices || {});
     });

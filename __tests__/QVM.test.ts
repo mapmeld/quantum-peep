@@ -43,7 +43,7 @@ test('one gate then measure program sent to Rigetti QVM (Docker)', (done) => {
   let q = new RigettiProcessor({
     //api_key: secrets.rigetti.api_key || '',
     //user_id: secrets.rigetti.user_id || ''
-    endpoint: 'http://165.227.62.245:5000'
+    endpoint: 'http://167.99.232.33:5000'
   });
   q.run(p, 2, (body: object) => {
     console.log(body);
