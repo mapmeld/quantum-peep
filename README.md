@@ -5,8 +5,6 @@
 Work in progress - build quantum programs that are platform-agnostic -
 compile for IBM's QASM, Rigetti's Quil, Microsoft's Q#, or Google's Cirq.
 
-<img src="https://raw.githubusercontent.com/mapmeld/quantum-peep/master/quail-logo.png" width="300"/>
-
 ## Example code
 
 ```javascript
