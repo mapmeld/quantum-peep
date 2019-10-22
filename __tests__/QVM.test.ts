@@ -67,12 +67,12 @@ test('device list from Rigetti', (done) => {
 //   });
 // }, 10000);
 
-test('device list from IBM', (done) => {
-  let q = new IBMProcessor({ processor: 'ibmqx4' });
+// test('device list from IBM', (done) => {
+//   let q = new IBMProcessor({ processor: 'ibmqx4' });
 
-  q.devices((device: { id: string, status: string }) => {
-    console.log(device);
-    expect(device.id).toBe('ibmqx4');
-    done();
-  });
-});
+//   q.devices((device: { id: string, status: string }) => {
+//     console.log(device);
+//     expect(device.id).toBe('ibmqx4');
+//     done();
+//   });
+// });
