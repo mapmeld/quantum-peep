@@ -34,22 +34,22 @@ test('device list from Rigetti', (done) => {
   });
 });
 
-test('one gate then measure program sent to Rigetti QVM (Docker)', (done) => {
-  let xgate = Gates.X(1);
-  let p = new Program();
-  p.add(xgate);
-  p.measure(1, 2);
+// test('one gate then measure program sent to Rigetti QVM (Docker)', (done) => {
+//   let xgate = Gates.X(1);
+//   let p = new Program();
+//   p.add(xgate);
+//   p.measure(1, 2);
 
-  let q = new RigettiProcessor({
-    //api_key: secrets.rigetti.api_key || '',
-    //user_id: secrets.rigetti.user_id || ''
-    endpoint: 'http://167.99.232.33:5000'
-  });
-  q.run(p, 2, (body: object) => {
-    console.log(body);
-    done();
-  });
-}, 10000);
+//   let q = new RigettiProcessor({
+//     //api_key: secrets.rigetti.api_key || '',
+//     //user_id: secrets.rigetti.user_id || ''
+//     endpoint: 'http://167.99.232.33:5000'
+//   });
+//   q.run(p, 2, (body: object) => {
+//     console.log(body);
+//     done();
+//   });
+// }, 10000);
 
 // test('one gate then measure program sent to IBM', (done) => {
 //   let xgate = Gates.X(1);
