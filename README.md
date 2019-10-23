@@ -39,8 +39,10 @@ q.devices((deviceInfo) => {
 });
 
 // run on IBM quantum chip
+// setting backend: in node_modules/@qiskit/cloud/cfg.json, set URI to https://api.quantum-computing.ibm.com/api
 // getting the login: go to https://quantum-computing.ibm.com
-// inspect your browser's requests to headers on Backends
+// -- go to your profile
+// getting the token: inspect your browser's requests to headers on Backends
 let q2 = new IBMProcessor({
   login: secrets.ibm.login,
   token: secrets.ibm.token,
