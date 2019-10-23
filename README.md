@@ -22,10 +22,9 @@ p.code('q#');
 p.code('cirq');
 
 // run on Rigetti QVM Docker container
-// You can use my server here (does not receive API key or User ID credentials)
 // For actual QPUs, register for Rigetti Forest and use their endpoint, api_key, and user_id
 let q = new RigettiProcessor({
-  endpoint: 'http://167.99.232.33:5000',
+  endpoint: URL_of_Rigetti_qvm_docker,
   api_key: 'aaa',
   user_id: 'uuu'
 });
@@ -40,14 +39,19 @@ q.devices((deviceInfo) => {
 });
 
 // run on IBM quantum chip
+// getting the login: go to https://quantum-computing.ibm.com
+// inspect your browser's requests to headers on Backends
 let q2 = new IBMProcessor({
-  login: secrets.ibm.token,
-  processor: 'ibmqx4'
+  login: secrets.ibm.login,
+  token: secrets.ibm.token,
+  processor: 'ibmq_qasm_simulator'
 });
-// fetch device options + status from https://quantumexperience.ng.bluemix.net/api/Backends/ibmqx4
+// fetch device options + status from https://api.quantum-computing.ibm.com/api/Backends
 // uses given processor type
 q2.devices((deviceInfo) => {
-  // { "id": "ibmqx4", "status": "on", ... }
+  // [
+  //   { "name": "ibmq_ourense", "status": "on", "specificConfiguration": { ... }, ... }
+  // ]
 });
 q2.run(p, runTimes, (body) => {
   console.log(JSON.parse(body));
@@ -103,7 +107,7 @@ q_1: |0>┤ X ├┤M├
 ## Language references
 
 IBM's QISkit (for Python and JS) compile to OpenQASM:
-https://github.com/Qiskit/openqasm and Cloud reference: https://github.com/Qiskit/qiskit-js/tree/master/packages/qiskit-cloud
+https://github.com/Qiskit/openqasm
 
 Rigetti's pyQuil (and the previous jsQuil project) compile to Quil:
 http://docs.rigetti.com/en/stable/compiler.html

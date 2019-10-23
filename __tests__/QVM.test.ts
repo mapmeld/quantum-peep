@@ -7,7 +7,8 @@ let secrets = {
     user_id: process.env.RIGETTI_USER_ID
   },
   ibm: {
-    login: process.env.IBM_LOGIN
+    login: process.env.IBM_LOGIN,
+    token: process.env.IBM_TOKEN
   }
 };
 try {
@@ -51,28 +52,30 @@ test('device list from Rigetti', (done) => {
 //   });
 // }, 10000);
 
-// test('one gate then measure program sent to IBM', (done) => {
-//   let xgate = Gates.X(1);
-//   let p = new Program();
-//   p.add(xgate);
-//   p.measure(1, 2);
-//
-//   let q = new IBMProcessor({
-    //   login: secrets.ibm.login,
-    //   processor: 'simulator'
-    // });
-//   q.run(p, 2, (body: string) => {
-//     console.log(body);
-//     done();
-//   });
-// }, 10000);
+test('one gate then measure program sent to IBM', (done) => {
+  let xgate = Gates.X(1);
+  let p = new Program();
+  p.add(xgate);
+  p.measure(1, 2);
 
-// test('device list from IBM', (done) => {
-//   let q = new IBMProcessor({ processor: 'ibmqx4' });
+  let q = new IBMProcessor({
+      login: secrets.ibm.login,
+      processor: 'ibmq_qasm_simulator'
+    });
+  q.run(p, 2, (body: object) => {
+    console.log(body);
+    done();
+  });
+}, 10000);
 
-//   q.devices((device: { id: string, status: string }) => {
-//     console.log(device);
-//     expect(device.id).toBe('ibmqx4');
-//     done();
-//   });
-// });
+test('device list from IBM', (done) => {
+  let q = new IBMProcessor({
+    token: secrets.ibm.token
+  });
+
+  q.devices((devices: Array<{name: string}>) => {
+    console.log(devices);
+    expect(devices[0].name).toBe('ibmq_qasm_simulator');
+    done();
+  });
+});

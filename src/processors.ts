@@ -9,11 +9,12 @@ class QProcessor {
     api_key: string,
     user_id: string,
     login: string,
-    processor: string
+    processor: string,
+    token: string
   };
 
-  constructor ({ endpoint='', api_key='', user_id='', login='', processor='simulator' } : { endpoint?: string, api_key?: string, user_id?: string, login?: string, processor?: string }) {
-    this.connection = { api_key, user_id, login, processor };
+  constructor ({ endpoint='', api_key='', user_id='', login='', token='', processor='simulator' } : { endpoint?: string, api_key?: string, user_id?: string, login?: string, token?: string, processor?: string }) {
+    this.connection = { api_key, user_id, login, token, processor };
   }
 
   run (program: Program, iterations: number, callback: (body: object) => void) {
@@ -77,7 +78,7 @@ export class RigettiProcessor extends QProcessor {
 }
 
 export class IBMProcessor extends QProcessor {
-  constructor ({ endpoint='', api_key='', user_id='', login='', processor='simulator' } : { endpoint?: string, api_key?: string, user_id?: string, login?: string, processor?: string }) {
+  constructor ({ endpoint='', api_key='', user_id='', login='', processor='simulator' } : { endpoint?: string, api_key?: string, user_id?: string, login?: string, token?: string, processor?: string }) {
     super(arguments[0] || {});
   }
 
@@ -96,14 +97,13 @@ export class IBMProcessor extends QProcessor {
     });
   }
 
-  devices (callback: (device: { id: string, status: string }) => void) {
-    if (!this.connection.processor || this.connection.processor === 'simulator') {
-      return {};
-    }
-    fetch(`https://quantumexperience.ng.bluemix.net/api/Backends/${this.connection.processor}`)
+  devices (callback: (device: Array<{name: string}>) => void) {
+    fetch("https://api.quantum-computing.ibm.com/api/Backends", {
+        headers: { "X-Access-Token": this.connection.token }
+      })
       .then((res: { json: () => {} }) => res.json())
-      .then((jsresponse: {id: string, status: string}) => {
-        callback(jsresponse || { id: '', status: '' });
+      .then((jsresponse: Array<{name: string}>) => {
+        callback(jsresponse);
       });
   }
 }
