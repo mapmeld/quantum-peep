@@ -27,6 +27,8 @@ class Measure extends ProgramStep {
         return `let reg${this.register} = M(${this.qubit});`;
       case 'qasm':
         return `measure q[${this.qubit}] -> c[${this.register}];`;
+      case 'qobj':
+        return `{"name":"measure","qubits":[${this.qubit}],"clbits":[${this.register}]}`;
       case 'cirq':
         return `cirq.measure(q_${this.qubit}, key='c_${this.register}')`;
       default:
@@ -87,6 +89,12 @@ export class Program {
         let rgs = this.registersUsed();
         start += `creg c[${rgs[rgs.length - 1] + 1}];`
         break;
+      case 'qobj':
+        start = '{"id":"test_qobj","config":{"shots":1,"seed":1},"experiments":[';
+        start += '{"header":{"number_of_clbits":' + this.registersUsed();
+        start += ',"number_of_qubits":' + this.qubitsUsed() + '},"instructions":[';
+        end += ']}]}';
+        break;
       case 'cirq':
         start = 'import cirq\n';
         this.qubitsUsed().forEach((q) => {
@@ -100,7 +108,7 @@ export class Program {
     let joiner = '\n';
     if (language === 'qasm') {
       joiner = '';
-    } else if (language === 'cirq') {
+    } else if (language === 'cirq' || language === 'qobj') {
       joiner = ',\n';
     }
 

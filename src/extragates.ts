@@ -72,6 +72,11 @@ export class ExtraGate extends ProgramStep {
         throw new Error(`${this.name} operation not supported on QASM`);
       }
       return `${this.qasmVersion(this.name)} ${this.qubits.map(q => `q[${q}]`).join(',')};`;
+    } else if (language === 'qobj') {
+      if (['ISWAP'].indexOf(this.name) > -1) {
+        throw new Error(`${this.name} operation not supported on Qobj`);
+      }
+      return `{"name":"${this.qasmVersion(this.name)}","qubits":[${this.qubits.join(',')}]}`;
     } else if (language === 'cirq') {
       return `cirq.${this.cirqVersion(this.name)}(${this.qubits.map(q => `q_${q}`).join(', ')})`;
     }
@@ -107,6 +112,12 @@ export class PhaseGate extends ExtraGate {
       }
       let anglestr = (this.angle.action === 'multiply') ? (this.angle.number + 'pi') : ('pi/' + this.angle.number);
       return `${this.qasmVersion(this.name)}(${anglestr}) ${this.qubits.map(q => `q[${q}]`).join(',')};`;
+    } else if (language === 'qobj') {
+      if (['PSWAP'].indexOf(this.name) > -1) {
+        throw new Error(`${this.name} operation not supported on Qobj`);
+      }
+      let anglestr = (this.angle.action === 'multiply') ? (Math.PI * this.angle.number) : (Math.PI / this.angle.number);
+      return `{"name":"${this.qasmVersion(this.name)}","params":[${anglestr}],"qubits":[${this.qubits.join(',')}]}`;
     } else if (language === 'cirq') {
       let anglestr = (this.angle.action === 'multiply') ? this.angle.number : (1 / this.angle.number);
       return `cirq.${this.cirqVersion(this.name)}(${this.qubits.map(q => `q_${q}`).join(', ')}) ** ${anglestr.toFixed(3)}`;

@@ -2,7 +2,6 @@
 import { Program } from './programs';
 
 const fetch = require('node-fetch');
-const Cloud = require('@qiskit/cloud');
 
 class QProcessor {
   connection: {
@@ -83,17 +82,21 @@ export class IBMProcessor extends QProcessor {
   }
 
   run (program: Program, iterations: number, callback: (body: object) => void) {
-    const cloud = new Cloud();
-    cloud.login(this.connection.login).then(() => {
-      cloud.backends().then((res: object) => {
-        cloud.run(program.code('qasm'), {
-            backend: this.connection.processor,
-            shots: iterations
-          })
-          .then((res2: object) => {
-            callback(res2);
-          });
-      });
+    fetch("https://api.quantum-computing.ibm.com/api/jobs", {
+      headers: {
+        "X-Access-Token": this.connection.login
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        qObject: program.code('qobj'),
+        backend: { name: this.connection.processor },
+        shots: iterations
+      })
+    })
+    .then((res: { text: () => {} }) => res.text())
+    .then((text: string) => {
+      console.log(text);
+      callback({ t: text });
     });
   }
 

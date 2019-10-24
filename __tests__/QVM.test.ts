@@ -60,7 +60,7 @@ test('one gate then measure program sent to IBM', (done) => {
 
   let q = new IBMProcessor({
       login: secrets.ibm.login,
-      processor: 'ibmq_qasm_simulator'
+      processor: 'ibmqx2'
     });
   q.run(p, 2, (body: object) => {
     console.log(body);

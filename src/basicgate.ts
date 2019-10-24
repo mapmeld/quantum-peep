@@ -26,7 +26,7 @@ export class BasicGate extends ProgramStep {
       } else if (quil_name === 't') {
         return 'tdg';
       } else {
-        throw new Error('Dagger of gates other than S and T not supported for QASM');
+        throw new Error('Dagger of gates other than S and T not supported for IBM');
       }
     }
     return quil_name;
@@ -38,7 +38,7 @@ export class BasicGate extends ProgramStep {
       throw new Error('Identity gate unknown in Cirq');
     }
     if (this.inverse) {
-      throw new Error('No dagger gates supported in Cirq');      
+      throw new Error('No dagger gates supported in Cirq');
     }
     return quil_name;
   }
@@ -62,6 +62,8 @@ export class BasicGate extends ProgramStep {
       return `${this.inverse ? 'Adjoint ' : ''}${this.name}(${this.qubits.join(' ')});`;
     } else if (language === 'qasm') {
       return `${this.qasmVersion(this.name)} q[${this.qubits.join(' ')}];`;
+    } else if (language === 'qobj') {
+      return `{"name":"${this.qasmVersion(this.name)}","qubits":[${this.qubits.join(',')}]}`;
     } else if (language === 'cirq') {
       return `cirq.${this.cirqVersion(this.name)}(${this.qubits.map(q => `q_${q}`).join(', ')})`;
     }

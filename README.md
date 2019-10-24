@@ -3,7 +3,7 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/mapmeld/quantum-peep.svg)](https://greenkeeper.io/)
 
 Work in progress - build quantum programs that are platform-agnostic -
-compile for IBM's QASM, Rigetti's Quil, Microsoft's Q#, or Google's Cirq.
+compile for IBM's Qobj and QASM, Rigetti's Quil, Microsoft's Q#, or Google's Cirq.
 
 ## Example code
 
@@ -46,7 +46,7 @@ q.devices((deviceInfo) => {
 let q2 = new IBMProcessor({
   login: secrets.ibm.login,
   token: secrets.ibm.token,
-  processor: 'ibmq_qasm_simulator'
+  processor: 'ibmq_qobj_simulator'
 });
 // fetch device options + status from https://api.quantum-computing.ibm.com/api/Backends
 // uses given processor type
@@ -108,7 +108,7 @@ q_1: |0>┤ X ├┤M├
 
 ## Language references
 
-IBM's QISkit (for Python and JS) compile to OpenQASM:
+IBM's QISkit (for Python and JS) compile to Qobj and OpenQASM:
 https://github.com/Qiskit/openqasm
 
 Rigetti's pyQuil (and the previous jsQuil project) compile to Quil:
